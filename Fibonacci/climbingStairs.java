@@ -2,6 +2,21 @@
 
 import java.util.*;
 class climbingStairs{
+
+    // tabulation (bottom-up DP)
+    private static int countTabulation(int n){
+        if(n == 0 || n == 1) return 1;
+
+        int dp[] = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for(int i = 2; i <= n; i++){
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+
+        return dp[n];
+    }
    // recurssion
     private static int count(int n){
         if( n == 0)return 1;
@@ -50,14 +65,25 @@ class climbingStairs{
             System.out.println("Memoization Time: " + (end - start) + " ns");
         });
 
+        Thread t3 = new Thread(() -> {
+            long start = System.nanoTime();
+            int result = countTabulation(n);
+            long end = System.nanoTime();
+
+            System.out.println("Tabulation Result: " + result);
+            System.out.println("tabulation Time: " + (end - start) + " ns");
+        });
+
         // start threads
         t1.start();
         t2.start();
+        t3.start();
 
         // wait for both threads to finish
         try {
             t1.join();
             t2.join();
+            t3.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
